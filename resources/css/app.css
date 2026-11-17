@@ -1,0 +1,396 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body,
+html {
+    --font-sans:
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 0 0% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 3.9%;
+        --primary: 0 0% 9%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 0 0% 92.1%;
+        --secondary-foreground: 0 0% 9%;
+        --muted: 0 0% 96.1%;
+        --muted-foreground: 0 0% 45.1%;
+        --accent: 0 0% 96.1%;
+        --accent-foreground: 0 0% 9%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 92.8%;
+        --input: 0 0% 89.8%;
+        --ring: 0 0% 3.9%;
+        --chart-1: 12 76% 61%;
+        --chart-2: 173 58% 39%;
+        --chart-3: 197 37% 24%;
+        --chart-4: 43 74% 66%;
+        --chart-5: 27 87% 67%;
+        --radius: 0.5rem;
+        --sidebar-background: 0 0% 98%;
+        --sidebar-foreground: 240 5.3% 26.1%;
+        --sidebar-primary: 0 0% 10%;
+        --sidebar-primary-foreground: 0 0% 98%;
+        --sidebar-accent: 0 0% 94%;
+        --sidebar-accent-foreground: 0 0% 30%;
+        --sidebar-border: 0 0% 91%;
+        --sidebar-ring: 217.2 91.2% 59.8%;
+    }
+
+    .dark {
+        --background: 0 0% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 14.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 6.9%;
+        --muted-foreground: 0 0% 63.9%;
+        --accent: 0 0% 14.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 14.9%;
+        --input: 0 0% 14.9%;
+        --ring: 0 0% 83.1%;
+        --chart-1: 220 70% 50%;
+        --chart-2: 160 60% 45%;
+        --chart-3: 30 80% 55%;
+        --chart-4: 280 65% 60%;
+        --chart-5: 340 75% 55%;
+        --sidebar-background: 0 0% 7%;
+        --sidebar-foreground: 0 0% 95.9%;
+        --sidebar-primary: 360, 100%, 100%;
+        --sidebar-primary-foreground: 0 0% 100%;
+        --sidebar-accent: 0 0% 15.9%;
+        --sidebar-accent-foreground: 240 4.8% 95.9%;
+        --sidebar-border: 0 0% 15.9%;
+        --sidebar-ring: 217.2 91.2% 59.8%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/*
+ * Trance design system: grid surface, beams and frame guides shared by the
+ * Trance pages. Kept global (not component-scoped) because several
+ * components render into the same surface and the dark variants must key
+ * off the `.dark` class on <html>.
+ */
+.trance-surface {
+    --line: #c4c4c4;
+    --line-strong: #6b6b6b;
+    --grid-major: #e2e2e2;
+    --grid-minor: #eeeeee;
+    --beam: #4f46e5;
+    --beam-glow: rgb(99 102 241 / 0.55);
+}
+
+.dark .trance-surface {
+    --line: #3d3d3d;
+    --line-strong: #8f8f8f;
+    --grid-major: #1f1f1f;
+    --grid-minor: #141414;
+    --beam: #c7d2fe;
+    --beam-glow: rgb(165 180 252 / 0.6);
+}
+
+/* Grid sizes must match `gridSizes` in resources/js/lib/trance/beams.ts. */
+.grid-layer {
+    -webkit-mask-image: linear-gradient(to top right, #000 0%, rgb(0 0 0 / 0.35) 45%, transparent 85%);
+    mask-image: linear-gradient(to top right, #000 0%, rgb(0 0 0 / 0.35) 45%, transparent 85%);
+    background-image:
+        linear-gradient(var(--grid-major) 1px, transparent 1px), linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+        linear-gradient(var(--grid-minor) 1px, transparent 1px), linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
+    background-size:
+        120px 120px,
+        120px 120px,
+        30px 30px,
+        30px 30px;
+    background-position: center center;
+}
+
+.beam {
+    animation: beam-pulse var(--beam-pulse-duration) ease-in-out infinite alternate;
+}
+
+.beam path {
+    fill: none;
+    stroke: var(--beam);
+    stroke-linejoin: miter;
+    animation: beam-travel var(--beam-duration) linear both;
+}
+
+.beam-tail {
+    stroke-width: 1;
+    opacity: 0.45;
+}
+
+.beam-head {
+    stroke-width: 1.5;
+}
+
+.beam-frame .beam-tail {
+    stroke-width: 1.5;
+    opacity: 0.6;
+}
+
+.beam-frame .beam-head {
+    stroke-width: 2;
+}
+
+.beam-minor .beam-head {
+    stroke-width: 1;
+}
+
+@keyframes beam-pulse {
+    from {
+        opacity: 0.35;
+        filter: drop-shadow(0 0 1px var(--beam-glow));
+    }
+    to {
+        opacity: 1;
+        filter: drop-shadow(0 0 5px var(--beam-glow));
+    }
+}
+
+@keyframes beam-travel {
+    from {
+        stroke-dashoffset: var(--dash-from);
+    }
+    to {
+        stroke-dashoffset: var(--dash-to);
+    }
+}
+
+/* Frame guides: see FramePhase in components/trance/FrameGuides.vue. */
+.corner-mark {
+    transition: opacity 150ms ease-out;
+}
+
+.corner-mark.frame-phase-hidden {
+    opacity: 0;
+}
+
+.corner-mark-top-right.frame-phase-corners,
+.corner-mark-bottom-left.frame-phase-corners {
+    opacity: 0;
+    transition-duration: 700ms;
+}
+
+/* Lines leave by retracting into the centre of the box, quickly when hiding and slowly when settling. */
+.frame-line {
+    transition:
+        opacity 400ms cubic-bezier(0.65, 0, 0.35, 1),
+        transform 400ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.frame-line.frame-phase-hidden,
+.frame-line.frame-phase-corners {
+    opacity: 0;
+}
+
+.frame-line-x.frame-phase-hidden,
+.frame-line-x.frame-phase-corners {
+    transform: scaleX(0);
+}
+
+.frame-line-y.frame-phase-hidden,
+.frame-line-y.frame-phase-corners {
+    transform: scaleY(0);
+}
+
+.frame-line.frame-phase-hidden {
+    transition-duration: 300ms;
+}
+
+.frame-line.frame-phase-corners {
+    transition-duration: 700ms;
+}
+
+.frame-line-x.frame-phase-drawing {
+    animation: frame-line-draw-x 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 350ms both;
+}
+
+.frame-line-y.frame-phase-drawing {
+    animation: frame-line-draw-y 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 350ms both;
+}
+
+.corner-mark.frame-phase-drawing {
+    animation: frame-fade-in 250ms ease-out 450ms both;
+}
+
+/*
+ * Corner marks are a zero-size anchor at the frame corner holding two 3px
+ * arms; their geometry is set inline by FrameGuides.vue and animates between a
+ * "+" and an "L" bracket.
+ */
+.corner-mark {
+    position: absolute;
+    z-index: 20;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.corner-mark-arm {
+    position: absolute;
+    background: currentColor;
+    transition-property: top, right, bottom, left, width, height;
+    transition-duration: 700ms;
+    transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.frame-redraw path {
+    fill: none;
+    stroke: var(--beam);
+    stroke-width: 2;
+    filter: drop-shadow(0 0 4px var(--beam-glow));
+    animation: frame-redraw 900ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes frame-redraw {
+    0% {
+        stroke-dashoffset: var(--redraw-length);
+        opacity: 1;
+    }
+    55% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes frame-line-draw-x {
+    from {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+    to {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+@keyframes frame-line-draw-y {
+    from {
+        opacity: 0;
+        transform: scaleY(0);
+    }
+    to {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
+
+@keyframes frame-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.square-dot {
+    animation: square-dot 960ms steps(1, end) infinite;
+}
+
+@keyframes square-dot {
+    0% {
+        opacity: 1;
+    }
+    33% {
+        opacity: 0.2;
+    }
+}
+
+/*
+ * Screen-wide blur for page transitions (see layouts/TranceLayout.vue).
+ * `.screen-blur-out` comes last so leaving wins if both classes are present.
+ */
+/*
+ * Blur and fade run as separate animations of equal length so each gets its
+ * own easing curve without intermediate keyframes (a mid-point keyframe
+ * restarts the easing per segment, which reads as a hitch). Entering, the
+ * blur clears quickly while the fade settles gently; leaving, both build up
+ * slowly at first, like losing focus.
+ */
+.screen-blur-in {
+    animation:
+        screen-blur-in 1100ms cubic-bezier(0.16, 1, 0.3, 1) both,
+        screen-fade-in 1100ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+.screen-blur-out {
+    animation:
+        screen-blur-out 900ms cubic-bezier(0.5, 0, 0.75, 0) forwards,
+        screen-fade-out 900ms cubic-bezier(0.32, 0, 0.67, 0) forwards;
+}
+
+@keyframes screen-blur-in {
+    from {
+        filter: blur(12px);
+    }
+    to {
+        filter: blur(0);
+    }
+}
+
+@keyframes screen-fade-in {
+    from {
+        opacity: 0.2;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes screen-blur-out {
+    from {
+        filter: blur(0);
+    }
+    to {
+        filter: blur(12px);
+    }
+}
+
+@keyframes screen-fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0.2;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .square-dot,
+    .screen-blur-out,
+    .screen-blur-in {
+        animation: none;
+    }
+}
